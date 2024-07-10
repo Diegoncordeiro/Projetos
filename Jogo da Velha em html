@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jogo da Velha by Diego</title>
+<style>
+
+.container {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-gap: 5px;
+  margin: 20px auto;
+}
+
+.cell {
+  width: 100px;
+  height: 100px;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  font-size: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.status {
+  margin-top: 20px;
+  font-size: 24px;
+}
+
+button {
+  margin-top: 20px;
+  font-size: 16px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+footer {
+  background-color: #f30808;
+  color: #fff;
+  text-align: center;
+  padding: 1px 0;
+  bottom: 0%;
+  width: 100%;
+}
+</style>
+
+</head>
+<body>
+<div class="container">
+  <h1>Jogo da Velha</h1>
+  <div id="board" class="board">
+    <div class="cell" onclick="placeMarker(0)"></div>
+    <div class="cell" onclick="placeMarker(1)"></div>
+    <div class="cell" onclick="placeMarker(2)"></div>
+    <div class="cell" onclick="placeMarker(3)"></div>
+    <div class="cell" onclick="placeMarker(4)"></div>
+    <div class="cell" onclick="placeMarker(5)"></div>
+    <div class="cell" onclick="placeMarker(6)"></div>
+    <div class="cell" onclick="placeMarker(7)"></div>
+    <div class="cell" onclick="placeMarker(8)"></div>
+  </div>
+  <div id="status" class="status">É a vez do jogador X</div>
+  <button onclick="resetBoard()">Reiniciar Jogo</button>
+</div>
+
+<script>
+
+let currentPlayer = 'X';
+  let gameBoard = ['', '', '', '', '', '', '', '', ''];
+  const winningCombos = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+  
+  function placeMarker(index) {
+    if (!gameBoard[index]) {
+      gameBoard[index] = currentPlayer;
+      document.getElementsByClassName('cell')[index].innerText = currentPlayer;
+      
+      if (checkWin()) {
+        document.getElementById('status').innerText = `Jogador ${currentPlayer} ganhou!`;
+        disableBoard();
+      } else if (checkDraw()) {
+        document.getElementById('status').innerText = 'Empate!';
+      } else {
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        document.getElementById('status').innerText = `É a vez do jogador ${currentPlayer}`;
+      }
+    }
+  }
+  
+  function checkWin() {
+    return winningCombos.some(combination => {
+      return combination.every(index => {
+        return gameBoard[index] === currentPlayer;
+      });
+    });
+  }
+  
+  function checkDraw() {
+    return gameBoard.every(cell => cell !== '');
+  }
+  
+  function disableBoard() {
+    Array.from(document.getElementsByClassName('cell')).forEach(cell => {
+      cell.style.pointerEvents = 'none';
+    });
+  }
+  
+  function resetBoard() {
+    currentPlayer = 'X';
+    gameBoard = ['', '', '', '', '', '', '', '', ''];
+    Array.from(document.getElementsByClassName('cell')).forEach(cell => {
+      cell.innerText = '';
+      cell.style.pointerEvents = 'auto';
+    });
+    document.getElementById('status').innerText = `É a vez do jogador ${currentPlayer}`;
+  }
+  </script>
+
+<footer>
+  <p>&copy; 2024 Jogo da Velha by Diego. Todos os direitos reservados.</p>
+</footer>
+
+</body>
+</html>
